@@ -12,6 +12,10 @@ import codellama_post_process
 import fine_tune_post_process
 import codeQwen_post_process
 # from eval.error_type_identification import calc_accuracy
+
+from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
+
+
 def read_jsonl_file(file_path):
     results = []
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -90,6 +94,7 @@ def main():
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")
     parser.add_argument("--max_tokens", type=int, default=1024, help="Max tokens for sampling")
     parser.add_argument("--mode", type=str, default='', help="text-only or vlm mode")
+    parser.add_argument("--processor", type=str, default='', help="text-only or vlm mode")
     args = parser.parse_args()
 
     # read data
@@ -216,6 +221,15 @@ def main():
     runner = None
     
     if "Qwen" in args.model:  # CSE247
+        if args.mode == 'text_only':
+            tokenizer = AutoTokenizer.from_pretrained(args.model)
+
+            model = AutoModelForCausalLM.from_pretrained(
+                args.model,
+                torch_dtype="auto",
+                device_map="auto"
+            )
+        print('qwen runner ready')
         runner = Qwen_runner
     elif "gpt" in args.model:
         runner = gpt_runner
@@ -239,7 +253,7 @@ def main():
                     print("Prompt: ", prompt)
                     print("=====================================")
                     messages = [{"role": "user", "content": prompt}]
-                    responses = runner(args, messages)
+                    responses, num_text_tokens = runner(args, messages,model,tokenizer)
                     print("=====================================")
                     print("Responses: ", responses)
                     print("=====================================")

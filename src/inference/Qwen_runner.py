@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 import asyncio # CSE247
 
-async def Qwen_runner(args,messages):
+def Qwen_runner(args,messages,model,tokenizer):
 
     # client = OpenAI(
     #     api_key='',
