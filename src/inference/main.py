@@ -94,7 +94,6 @@ def main():
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")
     parser.add_argument("--max_tokens", type=int, default=1024, help="Max tokens for sampling")
     parser.add_argument("--mode", type=str, default='', help="text-only or vlm mode")
-    parser.add_argument("--processor", type=str, default='', help="text-only or vlm mode")
     args = parser.parse_args()
 
     # read data
