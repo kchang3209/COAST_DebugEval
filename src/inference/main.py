@@ -89,6 +89,7 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.2, help="Temperature for sampling")
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")
     parser.add_argument("--max_tokens", type=int, default=1024, help="Max tokens for sampling")
+    parser.add_argument("--mode", type=str, default='', help="text-only or vlm mode")
     args = parser.parse_args()
 
     # read data
@@ -187,13 +188,15 @@ def main():
             assert prompt_template is not None, "Prompt template is None"
             print("Prompt read successfully")
         else:
+            ## CSE247
             prompt_path = os.path.join(args.prompt_dir, args.task,"prompt_{}.txt".format(args.prompt_type))
             print("Reading prompt from {}".format(prompt_path))
             prompt_template = None
             with open(prompt_path, 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
             assert prompt_template is not None, "Prompt template is None"
-            print("Prompt read successfully")
+            print("Prompt read successfully (CSE247)")
+            
     # check output dir
     output_dir = os.path.join(args.output_dir, args.task, args.prompt_type)
     # if the output dir does not exist, create it
@@ -211,12 +214,13 @@ def main():
     print("Remaining {} samples to generate".format(len(remaining_data)))
 
     runner = None
-    if "gpt" in args.model:
+    
+    if "Qwen" in args.model:  # CSE247
+        runner = Qwen_runner
+    elif "gpt" in args.model:
         runner = gpt_runner
     elif args.model == 'deepseek-chat' or args.model == 'deepseek-coder':
         runner = deepseek_runner
-    elif args.model == 'qwen2-72b-instruct':
-        runner = Qwen_runner
     else:
         runner = vllm_runner
         # llm, sampling_params = get_llm_sampling_params(args)
