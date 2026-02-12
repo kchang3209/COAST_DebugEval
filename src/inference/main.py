@@ -94,6 +94,7 @@ def main():
     parser.add_argument("--top_p", type=float, default=0.95, help="Top p for sampling")
     parser.add_argument("--max_tokens", type=int, default=1024, help="Max tokens for sampling")
     parser.add_argument("--mode", type=str, default='', help="text-only or vlm mode")
+    parser.add_argument("--num_quiz", type=int, default=100, help="number of quizes in each catagory to solve")
     args = parser.parse_args()
 
     # read data
@@ -242,6 +243,7 @@ def main():
     # Inference
     if args.task == "error_code_localization":
         with open(output_path, "a") as f:
+            counter = 0
             for line in tqdm(remaining_data, desc="Generating samples", total=len(remaining_data)):
                 try:
                     question_content = line['question_content']
@@ -270,7 +272,9 @@ def main():
                     )
                     f.flush()  # make sure the output is written to file
                     print(repr(e))
-
+                counter += 1
+                if counter >= args.num_quiz:
+                    break
     elif args.task == "error_type_identification":
         with open(output_path, "a") as f:
             for line in tqdm(remaining_data,desc="Generating samples",total=len(remaining_data)):
