@@ -383,7 +383,7 @@ def main():
         for elem in results_file:
             line = json.loads(elem)
             references.append(line['task1_answer'])
-            predictions.append(post_process_func(line['responses'][0]))
+            predictions.append(post_process_func(line['responses']))
         refs_file = os.path.join(output_dir, "refs_{}.txt".format(args.prompt_type))
         pres_file = os.path.join(output_dir, "pres_{}.txt".format(args.prompt_type))
         write_to_txt_file(refs_file, references)
@@ -411,7 +411,7 @@ def main():
             line = json.loads(elem)
             choice = line['task2_choice']
             references.append(choice)
-            predictions.append(post_process_func(line['responses'][0]))
+            predictions.append(post_process_func(line['responses']))
         refs_file = os.path.join(output_dir, "refs_{}.txt".format(args.prompt_type))
         pres_file = os.path.join(output_dir, "pres_{}.txt".format(args.prompt_type))
         write_to_txt_file(refs_file, references)
@@ -447,7 +447,7 @@ def main():
             language = line['language']
             groupy = {
                 'question_id': line['question_id'],
-                'responses': post_process_func(line['responses'][0])
+                'responses': post_process_func(line['responses'])
             }
             if language == 'python':
                 python_file.write(json.dumps(groupy)+'\n')
@@ -475,7 +475,7 @@ def main():
             line = json.loads(elem)
             choice = 'A'
             references.append(choice)
-            predictions.append(post_process_func(line['responses'][0]))
+            predictions.append(post_process_func(line['responses']))
         refs_file = os.path.join(output_dir, "refs_{}.txt".format(args.prompt_type))
         pres_file = os.path.join(output_dir, "pres_{}.txt".format(args.prompt_type))
         write_to_txt_file(refs_file, references)
@@ -502,7 +502,7 @@ def main():
             line = json.loads(elem)
             choice = 'B'
             references.append(choice)
-            predictions.append(post_process_func(line['responses'][0]))
+            predictions.append(post_process_func(line['responses']))
         refs_file = os.path.join(output_dir, "refs_{}.txt".format(args.prompt_type))
         pres_file = os.path.join(output_dir, "pres_{}.txt".format(args.prompt_type))
         write_to_txt_file(refs_file, references)
